@@ -8,7 +8,8 @@ GPIO_InitTypeDef buzzer_gpio; // Define GPIO for buzzer
 max30102_t max30102;
 
 #define HEART_RATE_THRESHOLD 50 // Threshold to trigger the buzzer
-#define BUZZER_PIN GPIO_PIN_5   // PA5 is used fora the buzzer
+#define CRITICAL_HEART_RATE 40  // Critical threshold for longer buzzer alert
+#define BUZZER_PIN GPIO_PIN_5   // PA5 is used for the buzzer
 #define BUZZER_PORT GPIOA
 
 // Function prototypes
@@ -54,7 +55,7 @@ int main(void) {
 
             // Here, we would typically have a heart rate calculation function.
             // For simplicity, let's assume `calculate_heart_rate` returns a bpm value.
-            uint32_t aheart_rate = calculate_heart_rate(ir_sample, red_sample);
+            uint32_t heart_rate = calculate_heart_rate(ir_sample, red_sample);
 
             // Output the heart rate via UART
             char buffer[50];
@@ -70,9 +71,17 @@ int main(void) {
 // Check heart rate and trigger buzzer if below threshold
 void check_and_buzz(uint32_t heart_rate) {
     if (heart_rate < HEART_RATE_THRESHOLD) {
-        HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_SET); // Turn buzzer on
-        HAL_Delay(500); // Buzzer on duration
-        HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_RESET); // Turn buzzer off
+        if (heart_rate < CRITICAL_HEART_RATE) {
+            // Critical alert: longer buzzer duration for heart rate < 40 bpm
+            HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_SET);
+            HAL_Delay(1000); // Buzzer on for 1 second
+            HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_RESET);
+        } else {
+            // Standard alert for heart rate < 50 bpm
+            HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_SET);
+            HAL_Delay(500); // Buzzer on for 500ms
+            HAL_GPIO_WritePin(BUZZER_PORT, BUZZER_PIN, GPIO_PIN_RESET);
+        }
     }
 }
 
@@ -120,5 +129,4 @@ static void MX_USART1_UART_Init(void) {
 
 void SystemClock_Config(void) {
     // Add system clock configuration code here
-    //added it 
 }
