@@ -120,4 +120,5 @@ static void MX_USART1_UART_Init(void) {
 
 void SystemClock_Config(void) {
     // Add system clock configuration code here
+    //added it 
 }
