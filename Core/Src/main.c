@@ -113,6 +113,27 @@ int main(void)
   MX_I2C1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  /* USER CODE BEGIN 2 */
+uint8_t initiator_message[] = "Hello from Initiator\n"; // Message sent by the initiator
+uint8_t responder_response[50];                        // Buffer to hold the responder's response
+/* USER CODE END 2 */
+/* USER CODE BEGIN WHILE */
+while (1)
+{
+    // INITIATOR: Send message to Responder
+    HAL_UART_Transmit(&huart1, initiator_message, sizeof(initiator_message) - 1, HAL_MAX_DELAY);
+
+    // INITIATOR: Wait for response from Responder
+    HAL_UART_Receive(&huart1, responder_response, sizeof(responder_response), HAL_MAX_DELAY);
+
+    // Log response from Responder to the console
+    printf("Received from Responder: %s\n", responder_response);
+
+    // Delay between communication cycles
+    HAL_Delay(1000);
+}
+/* USER CODE END WHILE */
+
   // Initiation
   max30102_init(&max30102, &hi2c1);
   max30102_reset(&max30102);
