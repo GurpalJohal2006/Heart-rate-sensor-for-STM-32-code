@@ -173,7 +173,7 @@ while (1)
 int heartratesensorval = 35;
 
 
-if ((heartratesensorval > 40) && (heartratesensorval < 50))
+if ((heartratesensorval >= 40) && (heartratesensorval <= 50))
 
 {
 
