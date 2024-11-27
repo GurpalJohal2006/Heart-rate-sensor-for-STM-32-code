@@ -1,3 +1,11 @@
+/* USER CODE BEGIN Private defines */
+#define BUZZER_PIN GPIO_PIN_5
+#define BUZZER_PORT GPIOA
+#define LED_PIN GPIO_PIN_6   // New LED pin
+#define LED_PORT GPIOA       // New LED port
+/* USER CODE END Private defines */
+
+/* USER CODE END Private defines */
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
